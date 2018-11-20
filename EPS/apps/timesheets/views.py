@@ -23,3 +23,10 @@ def reports(request):
 def settings(request):
 	return render(request, "timesheets/settings.html")
 
+def toReport(request):
+    return redirect('/reports')
+    #will require user id 
+
+def toDash(request):
+	return redirect('/adminDash')
+	#will have if statement depending on the user level
