@@ -40,6 +40,13 @@
 *::after {
   box-sizing: border-box;
 }
+.nav-link{
+  margin-left: 50px;
+}
+
+.logout{
+  margin-left: 350px;
+}
 
 html {
   font-family: sans-serif;
