@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>Login/Registration</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'exam/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'timesheets/css/bootstrap.css' %}">
 </head>
 <body>
         <div class="center-block" style="padding:60px; border: 2px solid black; margin:10px; display: inline-block;">
@@ -26,13 +26,6 @@
                     <label for="repeat">Repeat Password: </label><input type="password" name="repeat" class="form-control" id="repeat" style="display: block">
                 </div>
                 <input type="submit" value="Register!" class="text-primary" style="display: block; margin-top: 5px">
-                {% if messages %}
-                {% for message in messages %}
-                {% if "register" in message.tags %}
-                <p class="text-danger">{{ message }}</p>
-                {% endif %}
-                {% endfor %}
-                {% endif %}
             </form>
         </div>
         <div class="center-block" style="padding:60px; margin:10px; border: 2px solid black; display: inline-block; vertical-align: top;">
@@ -46,13 +39,6 @@
                     <label for="logpassword">Password: </label><input type="password" name="logpassword" class="form-control" id="logpassword" style="display: block">
                 </div>
                 <input type="submit" value="Login!" class="text-primary" style="display: block; margin-top: 5px">
-                {% if messages %}
-                {% for message in messages %}
-                {% if "login" in message.tags %}
-                <p class="text-danger">{{ message }}</p>
-                {% endif %}
-                {% endfor %}
-                {% endif %}
             </form>
         </div>
 </body>
