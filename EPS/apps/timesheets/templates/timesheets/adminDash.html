@@ -4,32 +4,75 @@
 <head>
     <meta charset="utf-8" />
     <title>Admin Dashboard</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'timesheets/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style type="text/css">
+        .clockInBox{
+            vertical-align: top;
+            width: 300px;
+            display: inline-block;
+         
+            text-align: center;
+        }
+        .records{
+            vertical-align: top;
+            width: 800px;
+            display: inline-block;
+       
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">Clock In/Out<span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Users</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Daily Report</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Settings</a>
-              </li>
-              <li class="nav-item logout">
-                <a class="nav-link" href="#">Logout</a>
-              </li>
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">Company Name</a>
+            </div>
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Clock In/Out</a></li>
+              <li><a href="#">Users</a></li>
+              <li><a href="#">Daily Reports</a></li>
+              <li><a href="#">Settings</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#"><span class="glyphicon glyphicon-user"></span> Jun Sabayton</a></li>
+              <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
             </ul>
           </div>
-        </nav>     
+        </nav>
+        <div class="clockInBox">
+            <h3>Jun Sabayton</h3>
+            <p> 09:15 AM|05 May 2018</p>
+            <button type="button" class="btn btn-success">Clock In</button>
+            <button type="button" class="btn btn-danger">Clock Out</button>
+            <div></div>
+            <h5>Quote of the day:</h5>
+            <p>This is a quote of the day.This is a quote of the day.This is a quote of the day.This is a quote of the day.This is a quote of the day.This is a quote of the day.</p>
+        </div>
+        <div class="records">
+            <h1>Clock Records</h1>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Clock-in</th>
+                  <th scope="col">Clock-out</th>
+                  <th scope="col">Time Spent</th>
+                  <th scope="col">Task Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Jan 1, 2018</td>
+                  <td>08:00 AM</td>
+                  <td>05:00 PM</td>
+                  <td>20 hours</td>
+                  <td>Worked on Cloudboard Wireframe. </td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+          </div>    
     </div>
 </body>
 </html>
