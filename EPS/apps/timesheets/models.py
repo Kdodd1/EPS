@@ -21,7 +21,7 @@ class Day(models.Model):
 	clock_in = models.DateTimeField(auto_now_add=True)
 	clock_out = models.DateTimeField()
 	date = models.DateField(auto_now_add=True)
-	report = models.OneToOneField(Report)
+	report = models.OneToOneField(Report, related_name='day')
 	user = models.ForeignKey(User, related_name="days")
 	created_at = models.DateTimeField(auto_now_add = True)
 	updated_at = models.DateTimeField(auto_now = True)
