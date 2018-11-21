@@ -27,12 +27,13 @@
                 <div class="form-group">
                     <label for="repeat">Repeat Password: </label><input type="password" name="repeat" class="form-control" id="repeat" style="display: block">
                 </div>
+                <p>*Password must be more than 8 characters long</p>
                 <input type="submit" value="Register!" class="text-primary" style="display: block; margin-top: 5px">
             </form>
             {% if messages %}
                 {% for message in messages %}
                     {% if "register" in message.tags %}
-                        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                        <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
                     {% endif %}
                 {% endfor %}
             {% endif %}
@@ -47,12 +48,13 @@
                 <div class="form-group">
                     <label for="logpassword">Password: </label><input type="password" name="logpassword" class="form-control" id="logpassword" style="display: block">
                 </div>
+                *Email and Password are case sensitive
                 <input type="submit" value="Login!" class="text-primary" style="display: block; margin-top: 5px">
             </form>
             {% if messages %}
                  {% for message in messages %}
                     {% if "login" in message.tags %}
-                        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                        <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
                     {% endif %}
                 {% endfor %}
             {% endif %}

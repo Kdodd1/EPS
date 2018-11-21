@@ -18,33 +18,47 @@
                 <ul class="nav navbar-nav">
                     <li><a href="/toDash">Clock In/Out</a></li>
                     <li class="active"><a href="#">Manage Employees</a></li>
-                    <li><a href="/dailyReports">Daily Reports</a></li>
                     <li><a href="/settings">Settings</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Jun Sabayton</a></li>
-                    <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{current_user.first_name}} {{current_user.last_name}} </a></li>
+                    <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                 </ul>
             </div>
         </nav>
-        <h2>Manage Employees</h2>
         <table class="table">
             <thead>
                 <tr>
                     <th>Employee Name</th>
                     <th>Email Address</th>
                     <th>Daily Reports</th>
+                    <th>User Level</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
+                {% for user in users %}
                 <tr>
-                    <td>John Doe</td>
-                    <td>john@doe.com</td>
-                    <td><a href="/toReport" class="btn btn-primary">View Reports</a></td>
                     <td>
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editModal">Edit</button>
-                        <div class="modal fade" id="editModal" role="dialog">
+                        {{user.first_name}} {{user.last_name}}
+                    </td>
+                    <td>
+                        {{user.email}}
+                    </td>
+                    <td>
+                        <a href="/toReport" class="btn btn-primary">View Reports</a>
+                    </td>
+                    <td>
+                        {% if user.user_level == 9 %}
+                        <p>Administrator</p>
+                        {% endif %}
+                        {% if user.user_level == 1 %}
+                        <p>User</p>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editModal{{user.id}}">Edit</button>
+                        <div class="modal fade" id="editModal{{user.id}}" role="dialog">
                             <div class="modal-dialog">
                                 <!-- Modal content-->
                                 <div class="modal-content">
@@ -54,15 +68,16 @@
                                     </div>
                                     <div class="modal-body">
                                         <p>Are you sure you want to change user level?</p>
-                                        <form action="/create" method="POST">
+                                        <form action="{{user.id}}/level" method="POST">
                                             {% csrf_token %}
                                             <div class="form-group">
-                                                <label for="role">Role:</label>
-                                                <select class="form-control" id="role">
+                                                <label for="role">Role: </label>
+                                                <select name="role" class="form-control" id="role">
                                                     <option>User</option>
                                                     <option>Administrator</option>
                                                 </select>
                                             </div>
+                                            <input type="hidden" value="{{user.id}}" name="user_id" />
                                             <input type="submit" value="Update" class="text-primary" style="display: block; margin-top: 5px">
                                         </form>
                                     </div>
@@ -72,8 +87,8 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete</button>
-                        <div class="modal fade" id="deleteModal" role="dialog">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{user.id}}">Delete</button>
+                        <div class="modal fade" id="deleteModal{{user.id}}" role="dialog">
                             <div class="modal-dialog">
                                 <!-- Modal content-->
                                 <div class="modal-content">
@@ -83,9 +98,9 @@
                                     </div>
                                     <div class="modal-body">
                                         <p>Are you sure you want to delete this user?</p>
-                                        <form action="/delete" method="POST" style="display:inline-block">
+                                        <form action="{{user.id}}/delete" method="POST" style="display:inline-block">
                                             {% csrf_token %}
-                                            <input type="hidden" value="" name="user_id" />
+                                            <input type="hidden" value="{{user.id}}" name="user_id" />
                                             <input type='submit' class="btn-danger" value="Delete" style="vertical-align: top; margin: 5px">
                                         </form>
                                     </div>
@@ -97,8 +112,9 @@
                         </div>
                     </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
-    </div>
+       </div>
 </body>
 </html>

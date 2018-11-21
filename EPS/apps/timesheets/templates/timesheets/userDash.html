@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -30,23 +30,18 @@
             </div>
             <ul class="nav navbar-nav">
               <li class="active"><a href="#">Clock In/Out</a></li>
-              <li><a href="/dailyReports">Daily Reports</a></li>
               <li><a href="/settings">Settings</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="#"><span class="glyphicon glyphicon-user"></span> Jun Sabayton</a></li>
-              <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+              <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{current_user.first_name}} {{current_user.last_name}} </a></li>
+              <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
             </ul>
           </div>
         </nav>
         <div class="clockInBox">
-            <h3>Jun Sabayton</h3>
-            <p> 09:15 AM|05 May 2018</p>
+            <h3>{{current_user.first_name}} {{current_user.last_name}}</h3>
             <button type="button" class="btn btn-success">Clock In</button>
             <button type="button" class="btn btn-danger">Clock Out</button>
-            <div></div>
-            <h5>Quote of the day:</h5>
-            <p>This is a quote of the day.This is a quote of the day.This is a quote of the day.This is a quote of the day.This is a quote of the day.This is a quote of the day.</p>
         </div>
         <div class="records">
             <h1>Clock Records</h1>

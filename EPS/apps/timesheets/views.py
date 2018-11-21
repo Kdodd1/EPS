@@ -24,50 +24,175 @@ def create(request):
 			print(user.user_level)
 
 			request.session['email'] = request.POST['email']
-			request.session['user_id'] = user.id 
+			request.session['user_id'] = user.id
+			request.session['user_level'] = user.user_level
 			return redirect('/adminDash')
 		else:
 			request.session['email'] = request.POST['email']
 			request.session['user_id'] = user.id 
+			request.session['user_level'] = user.user_level
 			return redirect('/userDash')
+
+def update(request):
+	errors = Report.objects.basic_validator(request.POST)
+	if len(errors):
+		for key, value in errors.items():
+			messages.add_message(request, messages.ERROR, value, extra_tags='report')
+		return redirect('/dailyReports')
+	else:
+		report = Report.objects.create(task= request.POST['task'], notes = request.POST['notes'], assist = request.POST['assist'], user_id = request.session['user_id'])
+		if request.session['user_level'] == 1:
+			return redirect('/userDash')
+		elif request.session['user_level'] == 9:
+			return redirect('/adminDash')
 
 def login(request):
 	errors = User.objects.login_validator(request.POST)
 	if len(errors):
 		for key, value in errors.items():
 			messages.add_message(request, messages.ERROR, value, extra_tags= "login")
-		return redirect('/')
+			return redirect('/')
 	else:
 		request.session['email'] = request.POST['logemail']
-		request.session['user_id'] = User.objects.get(email= request.POST['logemail']).id 
+		request.session['user_id'] = User.objects.get(email= request.POST['logemail']).id
+		print('user id is:', request.session['user_id'])
 		if User.objects.get(email= request.POST['logemail']).user_level == 9:
+			request.session['user_level'] = User.objects.get(email= request.POST['logemail']).user_level
 			return redirect('/adminDash')
 		else: 
+			request.session['user_level'] = User.objects.get(email= request.POST['logemail']).user_level
 			return redirect('/userDash')
 
 def adminDash(request):
-
-	return render(request,"timesheets/adminDash.html")
+	if request.session['user_id'] == 0:
+		return redirect('/')
+	elif request.session['user_level'] == 1:
+		return redirect('/userDash')
+	print(request.session['user_level'])
+	context = {
+        "current_user": User.objects.get(id=request.session['user_id']),
+        "users": User.objects.all(),
+        "days": Day.objects.all(),
+        } 
+	return render(request,"timesheets/adminDash.html", context)
 
 def userDash(request):
-	return render(request, "timesheets/userDash.html")
-
+	if request.session['user_id'] == 0:
+		return redirect('/')
+	print(request.session['user_level'])
+	context = {
+        "current_user": User.objects.get(id=request.session['user_id']),
+        "days": Day.objects.all(),
+        } 
+	return render(request, "timesheets/userDash.html", context)
 def dailyReports(request):
+	if request.session['user_id'] == 0:
+		return redirect('/')
 	return render(request, "timesheets/dailyReports.html")
 
 def manage(request):
-	return render(request, "timesheets/manage.html")
+	if request.session['user_id'] == 0:
+		return redirect('/')
+	elif request.session['user_level'] == 1:
+		return redirect('/userDash')
+	context = {
+        "current_user": User.objects.get(id=request.session['user_id']),
+        "users": User.objects.all(),
+        "days": Day.objects.all(),
+        }
+	return render(request, "timesheets/manage.html", context)
 
 def reports(request):
-	return render(request, "timesheets/reports.html")
+	if request.session['user_id'] == 0:
+		return redirect('/')
+	context = {
+        "current_user": User.objects.get(id=request.session['user_id']),
+        "users": User.objects.all(),
+        "days": Day.objects.all(),
+        } 
+	return render(request, "timesheets/reports.html", context)
 
 def settings(request):
-	return render(request, "timesheets/settings.html")
+	if request.session['user_id'] == 0:
+		return redirect('/')
+	context = {
+        "current_user": User.objects.get(id=request.session['user_id']),
+        "users": User.objects.all(),
+        "days": Day.objects.all(),
+        } 
+	return render(request, "timesheets/settings.html", context)
+
+def changeEmail(request):
+	errors = User.objects.change_email_validator(request.POST)
+	if len(errors):
+		for key, value in errors.items():
+			messages.add_message(request, messages.ERROR, value, extra_tags='email')
+		return redirect('/settings')
+	else:
+		user = User.objects.get(id = request.session['user_id'])
+		user.email = request.POST['email']
+		user.save()
+		messages.add_message(request, messages.SUCCESS, "You successfully updated your email!", extra_tags='email')
+		return redirect('/settings')
+
+def changeName(request):
+	errors = User.objects.change_name_validator(request.POST)
+	if len(errors):                                      
+		for key, value in errors.items():
+			messages.add_message(request, messages.ERROR, value, extra_tags='name')
+		return redirect('/settings')
+	else:
+		user = User.objects.get(id = request.session['user_id'])
+		user.first_name = request.POST['first_name']
+		user.last_name = request.POST['last_name']
+		user.save()    
+		messages.add_message(request, messages.SUCCESS, "You successfully updated your name!", extra_tags='name')
+		return redirect('/settings')
+
+def resetPassword(request):
+	errors = User.objects.change_password_validator(request.POST)
+	if len(errors):
+		for key, value in errors.items():
+			messages.add_message(request, messages.ERROR, value, extra_tags='password')
+		return redirect('/settings')
+	else:
+		user = User.objects.get(id = request.session['user_id'])
+		newpassword = request.POST['newpassword']
+		newpassword = bcrypt.hashpw(newpassword.encode(), bcrypt.gensalt())
+		user.password = newpassword
+		user.save()
+		messages.add_message(request, messages.SUCCESS, "You successfully updated your password!", extra_tags='password')
+	return redirect('/settings')
 
 def toReport(request):
-    return redirect('/reports')
+	return redirect('/reports')
     #will require user id 
 
 def toDash(request):
-	return redirect('/adminDash')
-	#will have if statement depending on the user level
+	if request.session['user_level'] == 9:
+		return redirect('/adminDash')
+	elif request.session['user_level'] == 1:
+		return redirect('/userDash')
+
+def level(request, id):
+	print("employee id is", request.POST['user_id'])
+	print(request.POST['role'])
+	if request.POST['role'] == 'User':
+		user = User.objects.get(id=request.POST['user_id'])
+		user.user_level = 1
+		user.save()
+		return redirect('/manage')
+	elif request.POST["role"] == 'Administrator':
+		user = User.objects.get(id=id)
+		user.user_level = 9
+		user.save()
+		return redirect('/manage')
+
+def delete(request, id):
+	print(request.POST['user_id'])
+	User.objects.get(id=request.POST['user_id']).delete()
+	return redirect('/manage')
+
+def logout(request):
+	request.session.clear()
+	return redirect('/')

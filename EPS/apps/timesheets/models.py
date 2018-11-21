@@ -11,12 +11,12 @@ class UserManager(models.Manager):
 	def basic_validator(self, postData):
 		errors = {}
 		#first names
-		if len(postData['first_name']) < 1:
+		if len(postData['first_name']) < 2:
 			errors['first_name'] = "*Name field must be at least 2 characters long"
 		elif not NAME_REGEX.match(postData['first_name']):
 			errors['first_name'] = "*Name must not contain special characters or numbers"
 		#last names
-		if len(postData['last_name']) < 1:
+		if len(postData['last_name']) < 2:
 			errors['last_name'] = "*Name field must be at least 2 characters long"
 		elif not NAME_REGEX.match(postData['last_name']):
 			errors['last_name'] = "*Name must not contain special characters or numbers"
@@ -47,6 +47,74 @@ class UserManager(models.Manager):
 			errors['logpassword'] = "*Email and password do not match"
 
 		return errors
+
+	def change_email_validator(self, postData):
+		errors = {}
+		if not postData['email']:
+			errors['email'] = "*Email Field can't be empty"
+
+		elif not EMAIL_REGEX.match(postData['email']):
+			errors['email'] = "*Email must be in email format"
+
+		elif User.objects.filter(email = postData['email']):
+			errors['email'] = "*Email is already in the database"
+
+		return errors
+	
+	def change_name_validator(self, postData):
+		errors = {}
+		#first names
+		if not postData['first_name']:
+			errors['first_name'] = "*First name cannot be empty"
+		elif len(postData['first_name']) < 2:
+			errors['first_name'] = "*Name field must be at least 2 characters long"
+		elif not NAME_REGEX.match(postData['first_name']):
+			errors['first_name'] = "*First name cannot contain special characters or numbers"
+		#last names
+		if not postData['last_name']:
+			errors['last_name'] = "*Last name cannot be empty"
+		elif len(postData['last_name']) < 2:
+			errors['last_name'] = "*Name field must be at least 2 characters long"
+		elif not NAME_REGEX.match(postData['last_name']):
+			errors['last_name'] = "*Last name cannot contain special characters or numbers"
+		return errors
+	
+	def change_password_validator(self, postData):
+		errors = {}
+		user = User.objects.get(id = postData['user_id'])
+		if not postData['password']:
+			errors['password'] ="*Current Password field cannot be empty"
+
+		elif not bcrypt.checkpw(postData['password'].encode(), user.password.encode()):
+			errors['password'] = "*Incorrect password"
+
+		if not postData['newpassword']:
+			errors['newpassword'] ="*New Password field cannot be empty"
+		
+		elif len(postData['newpassword']) < 7:
+			errors['newpassword'] = "*New password must be atleast 8 character long"
+		
+		elif postData['repeat'] != postData['newpassword']:
+			errors['newpassword'] = "*New password and Password Confirmation fields do not match"
+		return errors
+
+class ReportManager(models.Manager):
+	def basic_validator(self, postData):
+		errors = {}
+        #tasks
+		if len(postData['task']) < 2:
+			errors['task'] = "*Name field must be at least 2 characters long"
+		elif len(postData['task']) > 85:
+			errors['first_name'] = "*Task field must be less than 85 characters long"
+        #notes
+		if len(postData['notes']) < 2:
+			errors['notes'] = "*Notes field must be at least 2 characters long"
+        #assistance
+		if len(postData['assist']) < 2:
+			errors['assist'] = "*Help field must be at least 2 characters long"
+
+		return errors
+
 
 class User(models.Model):
 	first_name = models.CharField(max_length=255)
