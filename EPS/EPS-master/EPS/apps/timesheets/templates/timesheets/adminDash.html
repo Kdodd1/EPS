@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style type="text/css">
+        .clockInBox{
+            vertical-align: top;
+            width: 300px;
+            display: inline-block;
+         
+            text-align: center;
+        }
+        .records{
+            vertical-align: top;
+            width: 800px;
+            display: inline-block;
+       
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">Company Name</a>
+            </div>
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Clock In/Out</a></li>
+              <li><a href="/manage">Manage Employees</a></li>
+
+              <li><a href="/settings">Settings</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+               <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{current_user.first_name}} {{current_user.last_name}} </a></li>
+              <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            </ul>
+          </div>
+        </nav>
+        <div class="clockInBox">
+            <h3>{{current_user.first_name}} {{current_user.last_name}}</h3>
+            <a href="/clockin">Clock In!</a>
+            <form action="/clockout" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="time">Choose an clockout time: </label>
+                    <input id="time" type="time" name="time" value="">
+                </div>
+                <div class="form-group">
+                    <label for="date">Choose an clockout date: </label>
+                    <input id="date" type="date" name="date" value="">
+                </div>
+                <input type="hidden" name="user_id" value='{{ current_user.id }}'>
+                <input type="submit" value="Submit!" class="text-primary" style="display: block; margin-top: 5px">
+            </form>
+            {% if messages %}
+            {% for message in messages %}
+            {% if "clock" in message.tags %}
+            <p {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            <a href="/clockoutnow">Clock Out Now!</a>
+            <button type="button" class="btn btn-success">Clock In</button>
+            <button type="button" class="btn btn-danger">Clock Out</button>
+        </div>
+        <div class="records">
+            <h1>Clock Records</h1>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Clock-in</th>
+                  <th scope="col">Clock-out</th>
+                  <th scope="col">Time Spent</th>
+                  <th scope="col">Task Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Jan 1, 2018</td>
+                  <td>08:00 AM</td>
+                  <td>05:00 PM</td>
+                  <td>20 hours</td>
+                  <td>Worked on Cloudboard Wireframe.</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+          </div>    
+    </div>
+</body>
+</html>
